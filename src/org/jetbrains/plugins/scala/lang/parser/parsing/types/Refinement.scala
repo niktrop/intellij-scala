@@ -17,8 +17,13 @@ import org.jetbrains.plugins.scala.lang.parser.util.ParserUtils
 /*
  * Refinement ::= [nl] '{' Refinestat {semi RefineStat} '}'
  */
+object Refinement extends Refinement {
+  override protected val refineStatSeq = RefineStatSeq
+}
 
-object Refinement {
+trait Refinement {
+  protected val refineStatSeq: RefineStatSeq
+
   def parse(builder: ScalaPsiBuilder): Boolean = {
     val refineMarker = builder.mark
     if (builder.twoNewlinesBeforeCurrentToken) {
@@ -34,7 +39,7 @@ object Refinement {
         return false
     }
     def foo() {
-      RefineStatSeq parse builder
+      refineStatSeq parse builder
     }
     ParserUtils.parseLoopUntilRBrace(builder, foo)
     builder.restoreNewlinesState

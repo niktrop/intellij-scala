@@ -22,15 +22,22 @@ import scala.annotation.tailrec
  *              | Path '.' 'type'
  *              | '(' Types [','] ')'
  */
+object SimpleType extends SimpleType {
+  override protected val typeArgs = TypeArgs
+  override protected val types = Types
+}
 
-object SimpleType {
+trait SimpleType {
+  protected val typeArgs: TypeArgs
+  protected val types: Types
+
   def parse(builder: ScalaPsiBuilder, isPattern: Boolean, multipleSQBrackets: Boolean = true): Boolean = {
     @tailrec
     def parseTail(curMarker: PsiBuilder.Marker, checkSQBracket: Boolean = true) {
       builder.getTokenType match {
         case ScalaTokenTypes.tLSQBRACKET if checkSQBracket =>
           val newMarker = curMarker.precede
-          TypeArgs.parse(builder, isPattern)
+          typeArgs.parse(builder, isPattern)
           curMarker.done(ScalaElementTypes.TYPE_GENERIC_CALL)
           parseTail(newMarker, checkSQBracket = multipleSQBrackets)
         case ScalaTokenTypes.tINNER_CLASS =>
@@ -56,7 +63,7 @@ object SimpleType {
         val tupleMarker = builder.mark
         builder.advanceLexer()
         builder.disableNewlines
-        val (_, isTuple) = Types parse builder
+        val (_, isTuple) = types parse builder
         builder.getTokenType match {
           case ScalaTokenTypes.tCOMMA =>
             builder.advanceLexer() //Ate ,
