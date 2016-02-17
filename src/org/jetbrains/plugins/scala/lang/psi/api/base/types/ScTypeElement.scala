@@ -65,3 +65,14 @@ trait ScTypeElement extends ScalaPsiElement with TypingContextOwner {
   @volatile
   private[this] var _analog: Option[ScTypeElement] = None
 }
+
+trait ScDesugarizableTypeElement extends ScTypeElement {
+  def desugarizedText: String
+
+  def computeDesugarizedType: Option[ScTypeElement]
+
+  override protected def innerType(ctx: TypingContext): TypeResult[ScType] = computeDesugarizedType match {
+    case Some(typeElement) => typeElement.getType(ctx)
+    case _ => Failure(s"Cannot desugarize $typeName", Some(this))
+  }
+}

@@ -10,10 +10,15 @@ package types
 * Date: 22.02.2008
 */
 
-trait ScInfixTypeElement extends ScTypeElement {
+trait ScInfixTypeElement extends ScDesugarizableToParametrizedTypeElement {
   override protected val typeName = "InfixType"
 
-  def lOp : ScTypeElement = findChildByClassScala(classOf[ScTypeElement])
-  def rOp : Option[ScTypeElement] 
-  def ref : ScStableCodeReferenceElement = findChildByClassScala(classOf[ScStableCodeReferenceElement])
+  def lOp = findChildByClassScala(classOf[ScTypeElement])
+
+  def rOp = findChildrenByClassScala(classOf[ScTypeElement]) match {
+    case Array(_, r) => Some(r)
+    case _ => None
+  }
+
+  def ref = findChildByClassScala(classOf[ScStableCodeReferenceElement])
 }
