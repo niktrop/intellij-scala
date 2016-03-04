@@ -20,7 +20,7 @@ import scala.collection.mutable.ArrayBuffer
 * @author ilyas
 */
 case class ScExistentialType(quantified : ScType,
-                             wildcards : List[ScExistentialArgument]) extends ValueType {
+                             wildcards: List[ScExistentialArgument]) extends ScalaType with ValueType {
 
   @volatile
   private var _boundNames: List[String] = null
@@ -534,7 +534,7 @@ case class ScExistentialArgument(name : String, args : List[ScTypeParameterType]
 }
 
 case class ScSkolemizedType(name : String, args : List[ScTypeParameterType], lower : ScType, upper : ScType)
-  extends ValueType {
+  extends ScalaType with ValueType {
   def visitType(visitor: ScalaTypeVisitor) {
     visitor.visitSkolemizedType(this)
   }

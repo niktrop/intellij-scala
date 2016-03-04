@@ -302,7 +302,7 @@ public class ScalaIntroduceTypeAliasDialog extends DialogWrapper implements Name
         myCbReplaceAllOccurences.setFocusable(false);
         myNameLabel.setLabelFor(myNameComboBox);
         myTypeLabel.setLabelFor(myTypeTextField);
-        myTypeTextField.setText(myTypeElement.calcType().presentableText());
+        myTypeTextField.setText(myTypeElement.calcType().toString());
         setUpOccurrences(scopeItem);
     }
 
